@@ -1,5 +1,5 @@
 {
-  "id": "[plugin].com.pot-app.anki",
+  "id": "plugin.com.pot-app.anki",
   "plugin_type": "collection",
   "icon": "anki.svg",
   "display": "Anki",
