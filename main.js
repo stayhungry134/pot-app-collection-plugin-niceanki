@@ -1,6 +1,8 @@
 async function collection(source, target, options = {}) {
     const { config, utils } = options;
-    const { tauriFetch: fetch } = utils;
+    const { http } = utils;
+    const { fetch, Boxy } = http;
+
     const { port = 8765 } = config;
 
     async function ankiConnect(action, version, params = {}) {
