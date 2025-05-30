@@ -106,13 +106,3 @@ const queryWord = async (word) => {
         'us_phone': us_phone,
     }
 }
-
-const options = {
-    config: {
-        port: 8765,
-        // deckName: '英语::每日生词',
-        deckName: '英语::每日生词',
-        modelName: '英语单词1'
-    }
-}
-await collection('phone', '123', options);
