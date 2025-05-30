@@ -4,5 +4,9 @@
   "icon": "anki.svg",
   "display": "Anki",
   "homepage": "https://github.com/pot-app/pot-app-collection-plugin-template",
-  "needs": [{ "key": "port", "display": "端口号" }]
+  "needs": [
+    { "key": "port", "display": "端口号" },
+    { "key": "deckName", "display": "牌组名" },
+    { "key": "modelName", "display": "模板名" }
+  ]
 }
