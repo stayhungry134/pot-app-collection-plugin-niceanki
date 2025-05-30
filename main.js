@@ -7,6 +7,70 @@ async function collection(source, target, options = {}) {
         modelName='英语单词'
     } = config;
 
+    const queryWord = async (word) => {
+        const url = 'https://dict.youdao.com/jsonapi_s'
+        const params = {
+            doctype: 'json',
+            jsonversion: 4,
+        };
+
+        const data = {
+            q: word,
+            le: 'en',
+            t: 2,
+            client: 'web',
+            sign: '4f3b645c416fd42cfec797713b4f5aa4',
+            keyfrom: 'webdict',
+        };
+
+        const headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.3",
+            "Host": "dict.youdao.com",
+            "Referer": "https://dict.youdao.com/result",
+            "Content-Type": "application/x-www-form-urlencoded"
+        };
+        const urlParams = new URLSearchParams(params).toString();
+        const bodyParams = new URLSearchParams(data).toString();
+
+        // 请求有道获得单词
+        const response = await fetch(`${url}?${urlParams}`, {
+            method: 'POST',
+            headers,
+            body: bodyParams,
+        });
+        const result = await response.json();
+        if (result && result['ec']) {}
+        // 单词释义
+        const word_data = result['ec']['word']
+        const us_phone = word_data['usphone']
+        const uk_phone = word_data['ukphone']
+        const meaning = word_data['trs']
+        const raw_collins = result['collins']['collins_entries'][0]['entries']['entry']
+        const collins = []
+        raw_collins.forEach(collin => {
+            let pos_entry = collin['tran_entry'][0]['pos_entry']
+            if (pos_entry){
+                collins.push({
+                    'pos': pos_entry['pos'],
+                    'tran': collin['tran_entry'][0]['tran'],
+                })
+            }
+        })
+        const meaning_str = meaning.map(item => {
+            return `<div><span class="pos me-2">${item.pos ?? ""}</span><span>${item.tran ?? ""}</span></div>`;
+        }).join("\n");
+        const collins_str = collins.map(item => {
+            return `<div><span class="pos me-2">${item.pos ?? ""}</span><span>${item.tran ?? ""}</span></div>`;
+        }).join("\n");
+        return {
+            'word': word,
+            'meaning': `${meaning_str}`,
+            'collins': `${collins_str}`,
+            'uk_phone': uk_phone,
+            'us_phone': us_phone,
+        }
+    }
+
     await ankiConnect('createDeck', 6, { deck: deckName });
 
     await ankiConnect('createModel', 6, {
@@ -40,69 +104,5 @@ async function collection(source, target, options = {}) {
             body: JSON.stringify({ action, version, params }),
         });
         return res.data;
-    }
-}
-
-const queryWord = async (word) => {
-    const url = 'https://dict.youdao.com/jsonapi_s'
-    const params = {
-        doctype: 'json',
-        jsonversion: 4,
-    };
-
-    const data = {
-        q: word,
-        le: 'en',
-        t: 2,
-        client: 'web',
-        sign: '4f3b645c416fd42cfec797713b4f5aa4',
-        keyfrom: 'webdict',
-    };
-
-    const headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.3",
-        "Host": "dict.youdao.com",
-        "Referer": "https://dict.youdao.com/result",
-        "Content-Type": "application/x-www-form-urlencoded"
-    };
-    const urlParams = new URLSearchParams(params).toString();
-    const bodyParams = new URLSearchParams(data).toString();
-
-    // 请求有道获得单词
-    const response = await fetch(`${url}?${urlParams}`, {
-        method: 'POST',
-        headers,
-        body: bodyParams,
-    });
-    const result = await response.json();
-    if (result && result['ec']) {}
-    // 单词释义
-    const word_data = result['ec']['word']
-    const us_phone = word_data['usphone']
-    const uk_phone = word_data['ukphone']
-    const meaning = word_data['trs']
-    const raw_collins = result['collins']['collins_entries'][0]['entries']['entry']
-    const collins = []
-    raw_collins.forEach(collin => {
-        let pos_entry = collin['tran_entry'][0]['pos_entry']
-        if (pos_entry){
-            collins.push({
-                'pos': pos_entry['pos'],
-                'tran': collin['tran_entry'][0]['tran'],
-            })
-        }
-    })
-    const meaning_str = meaning.map(item => {
-        return `<div><span class="pos me-2">${item.pos ?? ""}</span><span>${item.tran ?? ""}</span></div>`;
-    }).join("\n");
-    const collins_str = collins.map(item => {
-        return `<div><span class="pos me-2">${item.pos ?? ""}</span><span>${item.tran ?? ""}</span></div>`;
-    }).join("\n");
-    return {
-        'word': word,
-        'meaning': `${meaning_str}`,
-        'collins': `${collins_str}`,
-        'uk_phone': uk_phone,
-        'us_phone': us_phone,
     }
 }
