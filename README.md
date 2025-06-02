@@ -19,10 +19,10 @@
 
 2. 安装配置
 
-![image-20250530170929069](.\assets\image-20250530170929069.png)
+![image-20250530170929069](https://raw.githubusercontent.com/stayhungry134/pot-app-collection-plugin-niceanki/refs/heads/master/assets/image-20250530170929069.png)
 
 ### 效果展示
 
-![image-20250530171202598](.\assets\image-20250530171202598.png)
+![image-20250530171202598](https://raw.githubusercontent.com/stayhungry134/pot-app-collection-plugin-niceanki/refs/heads/master/assets/image-20250530171202598.png)
 
-![image-20250530171216314](.\assets\image-20250530171216314.png)
+![image-20250530171216314](https://raw.githubusercontent.com/stayhungry134/pot-app-collection-plugin-niceanki/refs/heads/master/assets/image-20250530171216314.png)
